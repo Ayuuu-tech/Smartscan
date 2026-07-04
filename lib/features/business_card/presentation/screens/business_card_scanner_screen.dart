@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mlkit_document_scanner/google_mlkit_document_scanner.dart';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:scanmate/core/theme/app_colors.dart';
 import 'package:scanmate/core/services/ocr_service.dart';
@@ -51,19 +51,15 @@ class _BusinessCardScannerScreenState
   Future<void> _launchCardScanner() async {
     ref.read(businessCardProvider.notifier).setScanning(true);
 
-    final options = DocumentScannerOptions(
-      documentFormats: {DocumentFormat.jpeg},
-      mode: ScannerMode.full,
-      isGalleryImport: false,
-    );
-
-    final scanner = DocumentScanner(options: options);
-
     try {
-      final result = await scanner.scanDocument();
+      // Cross-platform scanner (Android ML Kit / iOS VisionKit).
+      final images = await CunningDocumentScanner.getPictures(
+        noOfPages: 1,
+        isGalleryImportAllowed: true,
+      );
 
-      if (result.images != null && result.images!.isNotEmpty && mounted) {
-        final imagePath = result.images!.first;
+      if (images != null && images.isNotEmpty && mounted) {
+        final imagePath = images.first;
 
         final appDir = await getApplicationDocumentsDirectory();
         final cardDir = Directory('${appDir.path}/business_cards');
@@ -90,8 +86,6 @@ class _BusinessCardScannerScreenState
           ),
         );
       }
-    } finally {
-      scanner.close();
     }
   }
 

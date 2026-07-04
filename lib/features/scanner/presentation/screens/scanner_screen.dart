@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mlkit_document_scanner/google_mlkit_document_scanner.dart';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scanmate/core/services/camera_service.dart';
 import 'package:scanmate/core/theme/app_colors.dart';
@@ -41,21 +41,19 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
   }
 
   Future<void> _launchDocumentScanner() async {
-    final options = DocumentScannerOptions(
-      documentFormats: {DocumentFormat.jpeg},
-      mode: ScannerMode.full,
-      isGalleryImport: false,
-    );
-
-    final scanner = DocumentScanner(options: options);
-
+    // Cross-platform native document scanner:
+    //  • Android → Google's ML Kit document scanner
+    //  • iOS     → Apple VisionKit (built-in, iOS 13+)
+    // Both give edge detection + auto perspective crop.
     try {
-      final result = await scanner.scanDocument();
+      final images = await CunningDocumentScanner.getPictures(
+        isGalleryImportAllowed: true,
+      );
 
-      if (result.images != null && result.images!.isNotEmpty && mounted) {
+      if (images != null && images.isNotEmpty && mounted) {
         final notifier = ref.read(scanProvider.notifier);
-        for (final path in result.images!) {
-          // ML Kit writes to a cache dir; persist before storing.
+        for (final path in images) {
+          // Scanner writes to a cache dir; persist before storing.
           final persisted = await CameraService.persistImage(File(path));
           notifier.addCapturedImage(persisted);
         }
@@ -72,8 +70,6 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
           ),
         );
       }
-    } finally {
-      scanner.close();
     }
   }
 
