@@ -27,23 +27,19 @@ class DefaultFirebaseOptions {
     storageBucket: 'scanmate-5da65.firebasestorage.app',
   );
 
-  // WARNING: appId below is the ANDROID app id (…:android:…). iOS must use its
-  // own iOS-registered app id. Register the iOS app in the Firebase console and
-  // regenerate this file via `flutterfire configure` before shipping to iOS.
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCFDi9bXf_R9Ua77_iXbmUtBQNXSylzz0s',
-    appId: '1:350277273215:android:48adb0eaf279de54a1e14a',
+    apiKey: 'AIzaSyAL4UEa_l7iB2j2Hmou2LHOlVZ6ZCDWApA',
+    appId: '1:350277273215:ios:4e529dcd98c8e5a2a1e14a',
     messagingSenderId: '350277273215',
     projectId: 'scanmate-5da65',
     storageBucket: 'scanmate-5da65.firebasestorage.app',
     iosBundleId: 'com.scanmate.scanmate',
   );
 
-  // WARNING: reuses the Android app id — register macOS/Windows/Linux apps in
-  // Firebase and run `flutterfire configure` to get correct per-platform ids.
+  // macOS reuses the iOS app registration (same bundle id).
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCFDi9bXf_R9Ua77_iXbmUtBQNXSylzz0s',
-    appId: '1:350277273215:android:48adb0eaf279de54a1e14a',
+    apiKey: 'AIzaSyAL4UEa_l7iB2j2Hmou2LHOlVZ6ZCDWApA',
+    appId: '1:350277273215:ios:4e529dcd98c8e5a2a1e14a',
     messagingSenderId: '350277273215',
     projectId: 'scanmate-5da65',
     storageBucket: 'scanmate-5da65.firebasestorage.app',
