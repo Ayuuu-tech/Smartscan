@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "350277273215",
+    "project_id": "scanmate-5da65",
+    "storage_bucket": "scanmate-5da65.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350277273215:android:48adb0eaf279de54a1e14a",
+        "android_client_info": {
+          "package_name": "com.scanmate.scanmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "350277273215-4b0q35un8o767tjpin7arbtid0dre131.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scanmate.scanmate",
+            "certificate_hash": "bcedf7775b86fb6c03b87ed41d30a5cbebc6b958"
+          }
+        },
+        {
+          "client_id": "350277273215-2772qf14pmmijlisk51tcr2nqlfqb6u2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFDi9bXf_R9Ua77_iXbmUtBQNXSylzz0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "350277273215-2772qf14pmmijlisk51tcr2nqlfqb6u2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
