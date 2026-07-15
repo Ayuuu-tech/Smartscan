@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scanmate/core/theme/app_colors.dart';
+import 'package:smartscan/core/theme/app_colors.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {

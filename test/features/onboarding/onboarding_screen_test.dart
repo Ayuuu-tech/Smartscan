@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scanmate/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:smartscan/features/onboarding/presentation/screens/onboarding_screen.dart';
 
 void main() {
   testWidgets('Onboarding screen renders slides', (WidgetTester tester) async {
@@ -10,7 +10,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Scan Anything in Seconds'), findsOneWidget);
+    expect(find.text('All Your Cards, One Wallet'), findsOneWidget);
     expect(find.text('Skip'), findsOneWidget);
     expect(find.text('Next'), findsOneWidget);
   });

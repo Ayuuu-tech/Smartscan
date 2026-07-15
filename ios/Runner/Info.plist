@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Scanmate</string>
+	<string>SmartScan</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>scanmate</string>
+	<string>smartscan</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -38,13 +38,22 @@
 		</dict>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>ScanMate needs camera access to scan documents and business cards.</string>
+	<string>SmartScan needs camera access to scan your cards.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>SmartScan uses Face ID to unlock your card wallet and reveal card details.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>upi</string>
+		<string>gpay</string>
+		<string>phonepe</string>
+		<string>paytmmp</string>
+	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>ScanMate needs photo library access to import images for scanning.</string>
+	<string>SmartScan needs photo library access to import images for scanning.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>ScanMate needs permission to save scanned documents to your photo library.</string>
+	<string>SmartScan needs permission to save scanned documents to your photo library.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>ScanMate needs access to your contacts to save scanned business card information.</string>
+	<string>SmartScan needs access to your contacts to save scanned business card information.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

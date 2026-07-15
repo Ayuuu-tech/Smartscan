@@ -5,57 +5,40 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// App-wide user settings persisted to a small JSON file on device.
+/// (Card data itself lives in the encrypted vault, not here.)
 class AppSettings {
-  final bool cloudBackup;
-  final bool autoCapture;
-  final String defaultFilter; // matches ScanFilterType names, e.g. 'magicColor'
-  final String imageQuality; // 'High' | 'Medium' | 'Low'
+  /// Require biometric/PIN unlock when opening the wallet.
+  final bool appLock;
+
+  /// Allow storing CVV in the vault (off by default — safer).
+  final bool storeCvv;
+
+  /// User chose "continue without account" — skip the login flow.
+  final bool guestMode;
 
   const AppSettings({
-    this.cloudBackup = true,
-    this.autoCapture = true,
-    this.defaultFilter = 'magicColor',
-    this.imageQuality = 'High',
+    this.appLock = true,
+    this.storeCvv = false,
+    this.guestMode = false,
   });
 
-  /// JPEG quality (0–100) derived from the [imageQuality] label.
-  int get jpegQuality {
-    switch (imageQuality) {
-      case 'Low':
-        return 60;
-      case 'Medium':
-        return 80;
-      case 'High':
-      default:
-        return 92;
-    }
-  }
-
-  AppSettings copyWith({
-    bool? cloudBackup,
-    bool? autoCapture,
-    String? defaultFilter,
-    String? imageQuality,
-  }) =>
+  AppSettings copyWith({bool? appLock, bool? storeCvv, bool? guestMode}) =>
       AppSettings(
-        cloudBackup: cloudBackup ?? this.cloudBackup,
-        autoCapture: autoCapture ?? this.autoCapture,
-        defaultFilter: defaultFilter ?? this.defaultFilter,
-        imageQuality: imageQuality ?? this.imageQuality,
+        appLock: appLock ?? this.appLock,
+        storeCvv: storeCvv ?? this.storeCvv,
+        guestMode: guestMode ?? this.guestMode,
       );
 
   Map<String, dynamic> toMap() => {
-        'cloudBackup': cloudBackup,
-        'autoCapture': autoCapture,
-        'defaultFilter': defaultFilter,
-        'imageQuality': imageQuality,
+        'appLock': appLock,
+        'storeCvv': storeCvv,
+        'guestMode': guestMode,
       };
 
   factory AppSettings.fromMap(Map<String, dynamic> map) => AppSettings(
-        cloudBackup: map['cloudBackup'] as bool? ?? true,
-        autoCapture: map['autoCapture'] as bool? ?? true,
-        defaultFilter: map['defaultFilter'] as String? ?? 'magicColor',
-        imageQuality: map['imageQuality'] as String? ?? 'High',
+        appLock: map['appLock'] as bool? ?? true,
+        storeCvv: map['storeCvv'] as bool? ?? false,
+        guestMode: map['guestMode'] as bool? ?? false,
       );
 }
 
@@ -63,37 +46,30 @@ class SettingsNotifier extends AsyncNotifier<AppSettings> {
   @override
   Future<AppSettings> build() => _load();
 
-  Future<void> setCloudBackup(bool value) async {
-    final current = state.value ?? const AppSettings();
-    final updated = current.copyWith(cloudBackup: value);
+  Future<void> setAppLock(bool value) async {
+    final updated =
+        (state.value ?? const AppSettings()).copyWith(appLock: value);
     state = AsyncData(updated);
     await _save(updated);
   }
 
-  Future<void> setAutoCapture(bool value) async {
-    final current = state.value ?? const AppSettings();
-    final updated = current.copyWith(autoCapture: value);
+  Future<void> setGuestMode(bool value) async {
+    final updated =
+        (state.value ?? const AppSettings()).copyWith(guestMode: value);
     state = AsyncData(updated);
     await _save(updated);
   }
 
-  Future<void> setDefaultFilter(String value) async {
-    final current = state.value ?? const AppSettings();
-    final updated = current.copyWith(defaultFilter: value);
-    state = AsyncData(updated);
-    await _save(updated);
-  }
-
-  Future<void> setImageQuality(String value) async {
-    final current = state.value ?? const AppSettings();
-    final updated = current.copyWith(imageQuality: value);
+  Future<void> setStoreCvv(bool value) async {
+    final updated =
+        (state.value ?? const AppSettings()).copyWith(storeCvv: value);
     state = AsyncData(updated);
     await _save(updated);
   }
 
   static Future<File> _file() async {
     final dir = await getApplicationDocumentsDirectory();
-    return File('${dir.path}/scanmate_settings.json');
+    return File('${dir.path}/smartscan_settings.json');
   }
 
   static Future<AppSettings> _load() async {

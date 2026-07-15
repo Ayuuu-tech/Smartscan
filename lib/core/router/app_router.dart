@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:scanmate/features/onboarding/presentation/screens/splash_screen.dart';
-import 'package:scanmate/features/onboarding/presentation/screens/onboarding_screen.dart';
-import 'package:scanmate/features/auth/presentation/screens/login_screen.dart';
-import 'package:scanmate/features/auth/presentation/screens/create_account_screen.dart';
-import 'package:scanmate/features/dashboard/presentation/screens/dashboard_screen.dart';
-import 'package:scanmate/features/scanner/presentation/screens/scanner_screen.dart';
-import 'package:scanmate/features/crop/presentation/screens/crop_screen.dart';
-import 'package:scanmate/features/filter/presentation/screens/filter_screen.dart';
-import 'package:scanmate/features/ocr/presentation/screens/ocr_screen.dart';
-import 'package:scanmate/features/preview/presentation/screens/preview_screen.dart';
-import 'package:scanmate/features/business_card/presentation/screens/business_card_scanner_screen.dart';
-import 'package:scanmate/features/business_card/presentation/screens/business_card_edit_screen.dart';
+import 'package:smartscan/features/onboarding/presentation/screens/splash_screen.dart';
+import 'package:smartscan/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:smartscan/features/auth/presentation/screens/login_screen.dart';
+import 'package:smartscan/features/auth/presentation/screens/create_account_screen.dart';
+import 'package:smartscan/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:smartscan/features/wallet/presentation/screens/card_entry_screen.dart';
+import 'package:smartscan/features/wallet/presentation/screens/card_detail_screen.dart';
+import 'package:smartscan/features/wallet/presentation/screens/card_scan_screen.dart';
+import 'package:smartscan/features/wallet/presentation/screens/my_card_screen.dart';
+import 'package:smartscan/features/wallet/presentation/screens/pro_screen.dart';
+import 'package:smartscan/features/business_card/presentation/screens/business_card_scanner_screen.dart';
+import 'package:smartscan/features/business_card/presentation/screens/business_card_edit_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -37,24 +37,29 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const DashboardScreen(),
     ),
     GoRoute(
-      path: '/scanner',
-      builder: (context, state) => const ScannerScreen(),
+      path: '/card-entry',
+      builder: (context, state) => CardEntryScreen(
+        args: state.extra is CardEntryArgs
+            ? state.extra as CardEntryArgs
+            : const CardEntryArgs(),
+      ),
     ),
     GoRoute(
-      path: '/crop',
-      builder: (context, state) => const CropScreen(),
+      path: '/card-detail',
+      builder: (context, state) =>
+          CardDetailScreen(cardId: state.extra as String),
     ),
     GoRoute(
-      path: '/filter',
-      builder: (context, state) => const FilterScreen(),
+      path: '/card-scanner',
+      builder: (context, state) => const CardScanScreen(),
     ),
     GoRoute(
-      path: '/ocr',
-      builder: (context, state) => const OcrScreen(),
+      path: '/my-card',
+      builder: (context, state) => const MyCardScreen(),
     ),
     GoRoute(
-      path: '/preview',
-      builder: (context, state) => const PreviewScreen(),
+      path: '/pro',
+      builder: (context, state) => const ProScreen(),
     ),
     GoRoute(
       path: '/business-card-scanner',

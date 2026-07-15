@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:scanmate/core/theme/app_colors.dart';
-import 'package:scanmate/core/services/auth_service.dart';
+import 'package:smartscan/core/theme/app_colors.dart';
+import 'package:smartscan/core/services/auth_service.dart';
+import 'package:smartscan/core/services/settings_service.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -100,7 +101,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Text('Welcome back',
                         style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700, color: AppColors.text)),
                       const SizedBox(height: 8),
-                      const Text('Sign in to your ScanMate account',
+                      const Text('Sign in to your SmartScan account',
                         style: TextStyle(color: AppColors.hint, fontSize: 14),
                         textAlign: TextAlign.center,
                       ),
@@ -233,7 +234,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 20),
+
+                      // Cards live only on this device, so an account is
+                      // optional — don't force signup to use the wallet.
+                      TextButton(
+                        onPressed: () async {
+                          await ref
+                              .read(settingsProvider.notifier)
+                              .setGuestMode(true);
+                          if (context.mounted) context.go('/dashboard');
+                        },
+                        child: const Text('Continue without account →',
+                            style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14)),
+                      ),
+                      const SizedBox(height: 12),
 
                       Wrap(
                         alignment: WrapAlignment.center,

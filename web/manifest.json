@@ -1,6 +1,6 @@
 {
-    "name": "scanmate",
-    "short_name": "scanmate",
+    "name": "smartscan",
+    "short_name": "smartscan",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

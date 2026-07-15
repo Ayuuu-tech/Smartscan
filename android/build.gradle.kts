@@ -29,6 +29,28 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
+// Some plugins (e.g. cunning_document_scanner) still declare an old
+// compileSdk; their androidx dependencies need at least 34. Force a
+// modern compileSdk on every Android subproject.
+fun Project.bumpCompileSdk() {
+    extensions.findByName("android")?.let { ext ->
+        val androidExt = ext as com.android.build.gradle.BaseExtension
+        if ((androidExt.compileSdkVersion ?: "").removePrefix("android-")
+                .toIntOrNull()?.let { it < 35 } == true
+        ) {
+            androidExt.compileSdkVersion(35)
+        }
+    }
+}
+
+subprojects {
+    if (state.executed) {
+        bumpCompileSdk()
+    } else {
+        afterEvaluate { bumpCompileSdk() }
+    }
+}
+
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }

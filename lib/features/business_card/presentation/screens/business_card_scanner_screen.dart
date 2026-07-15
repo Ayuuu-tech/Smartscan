@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:scanmate/core/theme/app_colors.dart';
-import 'package:scanmate/core/services/ocr_service.dart';
-import 'package:scanmate/features/business_card/data/services/business_card_parser_service.dart';
-import 'package:scanmate/features/business_card/presentation/providers/business_card_provider.dart';
+import 'package:smartscan/core/theme/app_colors.dart';
+import 'package:smartscan/core/services/ocr_service.dart';
+import 'package:smartscan/features/business_card/data/services/business_card_parser_service.dart';
+import 'package:smartscan/features/business_card/presentation/providers/business_card_provider.dart';
 
 class BusinessCardScannerScreen extends ConsumerStatefulWidget {
   const BusinessCardScannerScreen({super.key});

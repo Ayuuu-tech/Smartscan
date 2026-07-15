@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:scanmate/core/theme/app_theme.dart';
-import 'package:scanmate/core/router/app_router.dart';
+import 'package:smartscan/core/theme/app_theme.dart';
+import 'package:smartscan/core/router/app_router.dart';
 
-class ScanMateApp extends StatelessWidget {
-  const ScanMateApp({super.key});
+class SmartScanApp extends StatelessWidget {
+  const SmartScanApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'ScanMate',
+      title: 'SmartScan',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       routerConfig: appRouter,

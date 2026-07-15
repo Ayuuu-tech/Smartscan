@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:scanmate/core/theme/app_colors.dart';
-import 'package:scanmate/core/services/auth_service.dart';
+import 'package:smartscan/core/theme/app_colors.dart';
+import 'package:smartscan/core/services/auth_service.dart';
 
 class CreateAccountScreen extends ConsumerStatefulWidget {
   const CreateAccountScreen({super.key});
@@ -114,7 +114,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                       Text('Create Account',
                         style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700, color: AppColors.text)),
                       const SizedBox(height: 8),
-                      const Text('Sign up for a new ScanMate account',
+                      const Text('Sign up for a new SmartScan account',
                         style: TextStyle(color: AppColors.hint, fontSize: 14),
                         textAlign: TextAlign.center,
                       ),

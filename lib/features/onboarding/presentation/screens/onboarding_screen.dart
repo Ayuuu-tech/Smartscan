@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:scanmate/core/theme/app_colors.dart';
+import 'package:smartscan/core/theme/app_colors.dart';
 
 class OnboardingPageModel {
   final IconData icon;
@@ -27,19 +27,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<OnboardingPageModel> _pages = const [
     OnboardingPageModel(
-      icon: Icons.document_scanner_rounded,
-      title: 'Scan Anything in Seconds',
-      description: 'Capture receipts, invoices, agreements, and more using your device camera with precise crop corners.',
+      icon: Icons.credit_card_rounded,
+      title: 'All Your Cards, One Wallet',
+      description: 'Scan your credit, debit, loyalty and visiting cards — the number, expiry and name are read automatically.',
     ),
     OnboardingPageModel(
-      icon: Icons.filter_b_and_w_rounded,
-      title: 'Enhance with Filters',
-      description: 'Clean up shadows, apply Magic Color, grayscale, or retro filters to make your digital scans look professional.',
+      icon: Icons.lock_rounded,
+      title: 'Encrypted & Offline',
+      description: 'Cards are stored encrypted on this device only, protected by your fingerprint or Face ID. Nothing is uploaded.',
     ),
     OnboardingPageModel(
-      icon: Icons.text_snippet_rounded,
-      title: 'Extract Text with OCR',
-      description: 'Instantly extract Latin script text, search keywords inside the document, and export them as plain text.',
+      icon: Icons.currency_rupee_rounded,
+      title: 'Pay & Fill in a Tap',
+      description: 'Pay via UPI, copy card details with an auto-clearing clipboard, and autofill checkout forms in other apps.',
     ),
   ];
 

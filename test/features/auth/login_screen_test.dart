@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scanmate/features/auth/presentation/screens/login_screen.dart';
+import 'package:smartscan/features/auth/presentation/screens/login_screen.dart';
 
 void main() {
   testWidgets('Login screen renders auth form', (WidgetTester tester) async {

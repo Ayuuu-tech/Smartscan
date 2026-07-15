@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:scanmate/core/constants/app_constants.dart';
-import 'package:scanmate/core/theme/app_colors.dart';
+import 'package:smartscan/core/constants/app_constants.dart';
+import 'package:smartscan/core/theme/app_colors.dart';
 
-/// In-app privacy policy describing exactly what ScanMate does with data.
+/// In-app privacy policy describing exactly what SmartScan does with data.
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
 
@@ -64,60 +64,55 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              _p('${AppConstants.appName} is a document scanner that lets you '
-                  'scan documents and business cards, extract text (OCR), and '
-                  'optionally back them up to your own Google Drive. Your '
+              _p('${AppConstants.appName} is a card wallet that lets you '
+                  'scan and store your bank, loyalty and visiting cards. Your '
                   'privacy matters — here is exactly what happens with your data.'),
 
               _section('1. What we access', [
-                _bullet('Camera', 'Used only while you are scanning a document '
-                    'or business card. We never record in the background.'),
-                _bullet('Photos / Gallery',
-                    'Only images you explicitly pick to import are used.'),
+                _bullet('Camera', 'Used only while you are scanning a card. '
+                    'Card photos are processed on-device and discarded — '
+                    'they are never saved or uploaded.'),
+                _bullet('Biometrics',
+                    'Your fingerprint / Face ID is checked by the operating '
+                    'system to unlock the wallet. We never see or store it.'),
                 _bullet('Contacts',
                     'Only when you tap "Save to contacts" from a scanned '
-                    'business card. We read contacts solely to detect '
+                    'visiting card. We read contacts solely to detect '
                     'duplicates, and add the one contact you choose.'),
                 _bullet('Google account',
-                    'Used to sign you in and, if you enable cloud backup, to '
-                    'store files in your own Google Drive.'),
+                    'Used only to sign you in.'),
               ]),
 
-              _section('2. Where your data is stored', [
-                _bullet('On your device',
-                    'By default, all scans and PDFs are saved locally on your '
-                    'phone. This is the primary copy.'),
-                _bullet('Your Google Drive',
-                    'If "Cloud backup" is ON, the PDF is uploaded to a folder '
-                    'named "${AppConstants.appName}" in YOUR Google Drive. Only '
-                    'you can access it. The app uses the drive.file scope, so '
-                    'it can only see files it created — never the rest of your '
-                    'Drive.'),
-                _bullet('Cloud database (Firebase)',
-                    'If cloud backup is ON, basic document info (title, date, '
-                    'page count) is stored under your account so your document '
-                    'list syncs across devices. Security rules ensure only you '
-                    'can read your own data.'),
+              _section('2. Where your card data is stored', [
+                _bullet('On your device only',
+                    'Card numbers, expiry dates and barcodes are stored in an '
+                    'encrypted vault backed by your phone\'s secure hardware '
+                    '(Android Keystore / iOS Keychain). They are NEVER '
+                    'uploaded to any server, including ours.'),
+                _bullet('Autofill (Android)',
+                    'If you enable autofill, an encrypted, CVV-free copy of '
+                    'your payment cards stays on-device so Android can fill '
+                    'checkout forms you choose to fill.'),
               ]),
 
               _section('3. What we do NOT do', [
                 _bullet('No selling', 'We never sell or rent your data.'),
-                _bullet('No ads tracking',
-                    'We do not use your documents for advertising.'),
-                _bullet('No hidden access',
-                    'The app cannot read files in your Drive that it did not '
-                    'create.'),
+                _bullet('No uploading',
+                    'Your card numbers never leave this phone.'),
+                _bullet('No payment processing',
+                    'Payments happen in your UPI app — we only pre-fill the '
+                    'details you enter.'),
               ]),
 
               _section('4. Your control', [
-                _bullet('Turn off cloud backup',
-                    'Settings → Cloud backup. When off, nothing leaves your '
-                    'device.'),
+                _bullet('App lock',
+                    'Settings → Security. Require biometrics every time the '
+                    'app opens.'),
+                _bullet('CVV storage',
+                    'Off by default. Enable it only if you want CVVs saved.'),
                 _bullet('Delete anytime',
-                    'Delete a document in the app, or remove files directly '
-                    'from your Google Drive.'),
-                _bullet('Sign out',
-                    'Signing out stops all cloud sync immediately.'),
+                    'Deleting a card removes it permanently from the vault. '
+                    'Uninstalling the app erases the entire vault.'),
               ]),
 
               _section('5. Contact', [

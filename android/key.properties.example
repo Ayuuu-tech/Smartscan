@@ -1,0 +1,8 @@
+# Copy to android/key.properties (gitignored) and fill in.
+# Create the keystore once with:
+#   keytool -genkey -v -keystore ~/smartscan-release.jks -keyalg RSA \
+#           -keysize 2048 -validity 10000 -alias smartscan
+storeFile=/absolute/path/to/smartscan-release.jks
+storePassword=YOUR_STORE_PASSWORD
+keyAlias=smartscan
+keyPassword=YOUR_KEY_PASSWORD

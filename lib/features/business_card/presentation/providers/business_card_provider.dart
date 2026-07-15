@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:scanmate/features/business_card/data/models/business_card_model.dart';
+import 'package:smartscan/features/business_card/data/models/business_card_model.dart';
 
 class BusinessCardState {
   final bool isScanning;

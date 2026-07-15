@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:scanmate/core/theme/app_colors.dart';
-import 'package:scanmate/core/utils/validators.dart';
-import 'package:scanmate/features/business_card/data/services/native_contacts_service.dart';
-import 'package:scanmate/features/business_card/presentation/providers/business_card_provider.dart';
+import 'package:smartscan/core/theme/app_colors.dart';
+import 'package:smartscan/core/utils/validators.dart';
+import 'package:smartscan/features/business_card/data/services/native_contacts_service.dart';
+import 'package:smartscan/features/business_card/presentation/providers/business_card_provider.dart';
 
 class BusinessCardEditScreen extends ConsumerStatefulWidget {
   const BusinessCardEditScreen({super.key});
