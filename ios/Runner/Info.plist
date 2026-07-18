@@ -54,6 +54,17 @@
 	<string>SmartScan needs permission to save scanned documents to your photo library.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>SmartScan needs access to your contacts to save scanned business card information.</string>
+	<!-- AdMob iOS app id. This is Google's official TEST id — replace with your
+	     real AdMob iOS app id before the App Store release. -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -30,7 +30,8 @@ Status of the 10 items + store-listing (ASO) so "SmartScan" ranks on search.
 
 If you lose `android/app/smartscan-release.jks` **you can never update the app again** on Play. Copy it (and `android/key.properties` with the passwords) to a safe place — password manager, private cloud, USB. Do NOT commit them to git (already gitignored).
 
-Keystore password / key password: `SmartScan@2026key` · alias: `smartscan`
+Keystore alias: `smartscan`. The store/key password is in `android/key.properties`
+(gitignored, on your local machine only) — keep it with your keystore backup.
 
 *(Recommended: enable Play App Signing when you upload — Google then holds the app signing key and your .jks becomes just the "upload key", which is safer.)*
 
