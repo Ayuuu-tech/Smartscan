@@ -10,6 +10,8 @@ void main() {
       ),
     );
 
+    // Let the router's async redirect resolve so the splash builds.
+    await tester.pump();
     expect(find.text('SmartScan'), findsOneWidget);
     await tester.pumpAndSettle(const Duration(seconds: 3));
   });

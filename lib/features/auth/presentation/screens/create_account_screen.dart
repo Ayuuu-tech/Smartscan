@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smartscan/core/theme/app_colors.dart';
 import 'package:smartscan/core/services/auth_service.dart';
+import 'package:smartscan/core/services/otp_service.dart';
 
 class CreateAccountScreen extends ConsumerStatefulWidget {
   const CreateAccountScreen({super.key});
@@ -45,7 +47,20 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
         setState(() => _isLoading = false);
         if (error == null) {
           TextInput.finishAutofillContext();
-          context.go('/dashboard');
+          final email = _emailController.text.trim();
+          // New accounts verify their email with an OTP.
+          if (OtpService.isConfigured) {
+            final otpError = await OtpService.sendOtp(email);
+            if (!mounted) return;
+            if (otpError != null) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(otpError), backgroundColor: AppColors.error));
+            } else {
+              context.go('/verify-otp', extra: email);
+            }
+          } else if (mounted) {
+            context.go('/dashboard');
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(error), backgroundColor: AppColors.error),
@@ -247,26 +262,35 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Apple Sign-in requires iOS.')),
-                            );
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.apple, color: AppColors.text, size: 22),
-                              const SizedBox(width: 12),
-                              const Flexible(child: Text('Continue with Apple',
-                                style: TextStyle(color: AppColors.text, fontWeight: FontWeight.w600), overflow: TextOverflow.ellipsis)),
-                            ],
+                      // Apple Sign-In is only shown on iOS (Play builds omit it).
+                      if (defaultTargetPlatform == TargetPlatform.iOS) ...[
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Apple Sign-in coming soon.')),
+                              );
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.apple,
+                                    color: AppColors.text, size: 22),
+                                const SizedBox(width: 12),
+                                const Flexible(
+                                    child: Text('Continue with Apple',
+                                        style: TextStyle(
+                                            color: AppColors.text,
+                                            fontWeight: FontWeight.w600),
+                                        overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                       const SizedBox(height: 32),
 
                       Wrap(

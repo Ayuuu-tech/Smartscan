@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:smartscan/core/models/wallet_card_model.dart';
+import 'package:smartscan/core/router/app_router.dart';
+import 'package:smartscan/features/wallet/presentation/screens/card_entry_screen.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -21,6 +23,17 @@ class NotificationService {
     importance: Importance.defaultImportance,
   );
 
+  static const _engageChannel = AndroidNotificationDetails(
+    'engagement',
+    'Reminders & tips',
+    channelDescription: 'Gentle nudges to keep your wallet up to date',
+    importance: Importance.defaultImportance,
+  );
+
+  /// Fixed id for the recurring "add your cards" nudge, kept separate from
+  /// the incrementing expiry/bill ids so it can be managed on its own.
+  static const int _engagementId = 900001;
+
   static Future<void> init() async {
     if (_ready) return;
     try {
@@ -37,14 +50,47 @@ class NotificationService {
           android: AndroidInitializationSettings('@mipmap/ic_launcher'),
           iOS: DarwinInitializationSettings(),
         ),
+        onDidReceiveNotificationResponse: _onTap,
       );
       await _plugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.requestNotificationsPermission();
       _ready = true;
+      await scheduleEngagementReminder();
     } catch (e) {
       debugPrint('NotificationService init failed: $e');
+    }
+  }
+
+  /// Notification tapped — deep-link into the add-card flow.
+  static void _onTap(NotificationResponse response) {
+    if (response.payload == 'add_card') {
+      try {
+        appRouter.push('/card-entry', extra: const CardEntryArgs());
+      } catch (e) {
+        debugPrint('Notification tap navigation failed: $e');
+      }
+    }
+  }
+
+  /// Recurring once-a-day nudge to add/update cards. Interactive: tapping
+  /// it deep-links into the app (payload 'add_card'). Kept to daily so it
+  /// stays helpful rather than spammy (Play policy / retention friendly).
+  static Future<void> scheduleEngagementReminder() async {
+    if (!_ready) return;
+    try {
+      await _plugin.periodicallyShowWithDuration(
+        _engagementId,
+        'Add your cards to SmartScan',
+        'Keep your bank, loyalty and visiting cards in one secure place. Tap to add a card.',
+        const Duration(hours: 24),
+        const NotificationDetails(android: _engageChannel),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        payload: 'add_card',
+      );
+    } catch (e) {
+      debugPrint('Engagement reminder schedule failed: $e');
     }
   }
 
@@ -54,6 +100,8 @@ class NotificationService {
     if (!_ready) return;
     try {
       await _plugin.cancelAll();
+      // cancelAll() also drops the recurring nudge — re-arm it.
+      await scheduleEngagementReminder();
       var id = 0;
       final now = tz.TZDateTime.now(tz.local);
 

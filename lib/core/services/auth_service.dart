@@ -150,6 +150,13 @@ class AuthService {
     }
   }
 
+  /// True when the signed-in account uses email/password (Google/Apple
+  /// accounts are already verified by their provider).
+  bool get usesPasswordProvider =>
+      _auth.currentUser?.providerData
+          .any((p) => p.providerId == 'password') ??
+      false;
+
   // ----------------------------------------------------------------
   // Update display name
   // ----------------------------------------------------------------

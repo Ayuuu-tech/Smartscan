@@ -51,3 +51,16 @@ app.*.map.json
 
 # Shareable release APK (103MB, exceeds GitHub limit)
 SmartScan.apk
+
+# Resend / OTP secrets (contains real API key)
+secrets.json
+
+# Cloud Functions build artifacts
+functions/node_modules/
+
+# Release signing (keep private, back up separately!)
+android/key.properties
+*.jks
+*.keystore
+
+SmartScan.aab

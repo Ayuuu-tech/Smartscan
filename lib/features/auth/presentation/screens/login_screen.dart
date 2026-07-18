@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smartscan/core/theme/app_colors.dart';
 import 'package:smartscan/core/services/auth_service.dart';
+import 'package:smartscan/core/services/otp_service.dart';
 import 'package:smartscan/core/services/settings_service.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -40,7 +42,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() => _isLoading = false);
         if (error == null) {
           TextInput.finishAutofillContext();
-          context.go('/dashboard');
+          final email = _emailController.text.trim();
+          final uid = authService.currentUser?.uid;
+          // Email/password accounts verify with an OTP once per device.
+          if (authService.usesPasswordProvider &&
+              uid != null &&
+              !await OtpService.isDeviceVerified(uid) &&
+              OtpService.isConfigured) {
+            final otpError = await OtpService.sendOtp(email);
+            if (!mounted) return;
+            if (otpError != null) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(otpError), backgroundColor: AppColors.error));
+            } else {
+              context.go('/verify-otp', extra: email);
+            }
+          } else if (mounted) {
+            context.go('/dashboard');
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(error), backgroundColor: AppColors.error),
@@ -62,6 +81,85 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
       }
     }
+  }
+
+  Future<void> _showForgotPasswordDialog() async {
+    final controller =
+        TextEditingController(text: _emailController.text.trim());
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+    bool sending = false;
+
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Reset password'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                  'Enter your account email and we\'ll send you a reset link. '
+                  'Open the link to set a new password.',
+                  style: TextStyle(color: AppColors.hint, fontSize: 14)),
+              const SizedBox(height: 16),
+              TextField(
+                controller: controller,
+                keyboardType: TextInputType.emailAddress,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Email address',
+                  prefixIcon:
+                      Icon(Icons.email_outlined, color: AppColors.hint),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Cancel')),
+            ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+              onPressed: sending
+                  ? null
+                  : () async {
+                      final email = controller.text.trim();
+                      if (!emailRegex.hasMatch(email)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content:
+                                  Text('Please enter a valid email address.'),
+                              backgroundColor: AppColors.error),
+                        );
+                        return;
+                      }
+                      setDialogState(() => sending = true);
+                      final error = await ref
+                          .read(authServiceProvider)
+                          .sendPasswordResetEmail(email);
+                      if (!ctx.mounted || !mounted) return;
+                      Navigator.pop(ctx);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(error ??
+                              'Reset link sent to $email. Check your inbox '
+                                  'and spam folder.'),
+                          backgroundColor: error == null
+                              ? AppColors.secondary
+                              : AppColors.error,
+                          duration: const Duration(seconds: 5),
+                        ),
+                      );
+                    },
+              child: const Text('Send reset link'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -158,13 +256,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {
-                            final authService = ref.read(authServiceProvider);
-                            authService.sendPasswordResetEmail(_emailController.text.trim());
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Password reset link sent if email exists!'), backgroundColor: AppColors.secondary),
-                            );
-                          },
+                          onPressed: _showForgotPasswordDialog,
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -214,26 +306,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Apple Sign-in requires iOS.')),
-                            );
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.apple, color: AppColors.text, size: 22),
-                              const SizedBox(width: 12),
-                              const Flexible(child: Text('Continue with Apple',
-                                style: TextStyle(color: AppColors.text, fontWeight: FontWeight.w600), overflow: TextOverflow.ellipsis)),
-                            ],
+                      // Apple Sign-In is only shown on iOS (Play builds omit it).
+                      if (defaultTargetPlatform == TargetPlatform.iOS) ...[
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Apple Sign-in coming soon.')),
+                              );
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.apple,
+                                    color: AppColors.text, size: 22),
+                                const SizedBox(width: 12),
+                                const Flexible(
+                                    child: Text('Continue with Apple',
+                                        style: TextStyle(
+                                            color: AppColors.text,
+                                            fontWeight: FontWeight.w600),
+                                        overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                       const SizedBox(height: 20),
 
                       // Cards live only on this device, so an account is

@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:smartscan/core/services/auth_service.dart';
 
 /// Google Play Billing / App Store subscriptions for SmartScan Pro.
 ///
@@ -21,6 +23,12 @@ class PurchaseService {
   static const monthlyId = 'smartscan_pro_monthly';
   static const yearlyId = 'smartscan_pro_yearly';
   static const productIds = {monthlyId, yearlyId};
+
+  /// Accounts granted lifetime Pro for free (test / comp access).
+  /// Compared case-insensitively against the signed-in email.
+  static const lifetimeProEmails = {
+    'ayushmaan.ggn@gmail.com',
+  };
 }
 
 /// Pro entitlement + available subscription products.
@@ -59,10 +67,22 @@ class ProNotifier extends AsyncNotifier<ProState> {
 
   @override
   Future<ProState> build() async {
+    // Rebuild on login/logout so comp-account Pro is re-evaluated.
+    ref.watch(authStateProvider);
+
     // Cached entitlement first, so Pro works offline.
     bool isPro = false;
     try {
       isPro = await _storage.read(key: _entitlementKey) == 'true';
+    } catch (_) {}
+
+    // Comp accounts (test emails) always get Pro, regardless of billing.
+    try {
+      final email = FirebaseAuth.instance.currentUser?.email?.toLowerCase();
+      if (email != null &&
+          PurchaseService.lifetimeProEmails.contains(email)) {
+        isPro = true;
+      }
     } catch (_) {}
 
     final iap = InAppPurchase.instance;

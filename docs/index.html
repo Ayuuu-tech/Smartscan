@@ -1,0 +1,288 @@
+<title>SmartScan — Privacy Policy</title>
+<style>
+  :root {
+    --bg: #FAF7F0;
+    --surface: #FFFFFF;
+    --ink: #2A2A2A;
+    --muted: #6F6D64;
+    --hint: #8C8A82;
+    --primary: #E36A26;
+    --primary-soft: rgba(227, 106, 38, 0.08);
+    --secondary: #5A7A2B;
+    --border: #E5E2D9;
+    --radius: 14px;
+    --maxw: 44rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16150F;
+      --surface: #211F17;
+      --ink: #EDEAE0;
+      --muted: #A8A597;
+      --hint: #8C8A82;
+      --primary: #F0894C;
+      --primary-soft: rgba(240, 137, 76, 0.12);
+      --secondary: #93B25B;
+      --border: #33301F;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #16150F;
+    --surface: #211F17;
+    --ink: #EDEAE0;
+    --muted: #A8A597;
+    --hint: #8C8A82;
+    --primary: #F0894C;
+    --primary-soft: rgba(240, 137, 76, 0.12);
+    --secondary: #93B25B;
+    --border: #33301F;
+  }
+  :root[data-theme="light"] {
+    --bg: #FAF7F0;
+    --surface: #FFFFFF;
+    --ink: #2A2A2A;
+    --muted: #6F6D64;
+    --hint: #8C8A82;
+    --primary: #E36A26;
+    --primary-soft: rgba(227, 106, 38, 0.08);
+    --secondary: #5A7A2B;
+    --border: #E5E2D9;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1.1rem, 4vw, 2rem) 4rem;
+  }
+
+  header.masthead {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .mark {
+    flex: none;
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    display: grid; place-items: center;
+  }
+  .mark svg { width: 28px; height: 28px; }
+  .masthead h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .masthead .sub {
+    margin: 0.15rem 0 0;
+    font-size: 0.82rem;
+    color: var(--hint);
+    letter-spacing: 0.02em;
+  }
+
+  .lede {
+    font-size: 1.02rem;
+    color: var(--muted);
+    margin: 0 0 2.25rem;
+    max-width: 40rem;
+  }
+
+  section { margin-bottom: 2.25rem; }
+  .eyebrow {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+  }
+  h2 {
+    margin: 0 0 0.9rem;
+    font-size: 1.12rem;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.15rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .item { display: grid; gap: 0.2rem; }
+  .item .k {
+    font-size: 0.9rem;
+    font-weight: 650;
+    color: var(--ink);
+  }
+  .item .v {
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .item.stop .k { color: var(--secondary); }
+
+  .contact {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    background: var(--primary-soft);
+    border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+    border-radius: var(--radius);
+    padding: 1rem 1.15rem;
+    font-weight: 600;
+  }
+  .contact svg { width: 20px; height: 20px; color: var(--primary); flex: none; }
+  .contact a { color: var(--ink); text-decoration: none; }
+  .contact a:hover { text-decoration: underline; }
+
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--hint);
+  }
+  a { color: var(--primary); }
+  a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 3px; }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="5" width="20" height="14" rx="3"></rect>
+        <path d="M2 10h20"></path>
+        <path d="M6 15h4"></path>
+      </svg>
+    </div>
+    <div>
+      <h1>SmartScan Privacy Policy</h1>
+      <p class="sub">Last updated: 16 July 2026</p>
+    </div>
+  </header>
+
+  <p class="lede">
+    SmartScan is a card wallet that lets you scan and store your bank, loyalty and
+    visiting cards. Your card data lives on your device, not on our servers. Here is
+    exactly what happens with your information.
+  </p>
+
+  <section>
+    <span class="eyebrow">Section 1</span>
+    <h2>What we access</h2>
+    <div class="card">
+      <div class="item">
+        <span class="k">Camera</span>
+        <span class="v">Used only while you scan a card. Card images are processed on your device and discarded — never saved or uploaded.</span>
+      </div>
+      <div class="item">
+        <span class="k">Biometrics (fingerprint / face)</span>
+        <span class="v">Checked by your operating system to unlock the wallet. SmartScan never sees or stores your biometric data.</span>
+      </div>
+      <div class="item">
+        <span class="k">Contacts</span>
+        <span class="v">Accessed only when you tap “Save to contacts” on a scanned visiting card — to check for duplicates and add the one contact you choose. We never read your contacts otherwise.</span>
+      </div>
+      <div class="item">
+        <span class="k">Google account</span>
+        <span class="v">Used only to sign you in and, if you turn it on, to store your own encrypted backup file in your Google Drive.</span>
+      </div>
+      <div class="item">
+        <span class="k">Email address</span>
+        <span class="v">Used to send you a one-time verification code and, if requested, a password-reset link. Nothing else.</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Section 2</span>
+    <h2>Where your card data is stored</h2>
+    <div class="card">
+      <div class="item">
+        <span class="k">On your device only</span>
+        <span class="v">Card numbers, expiry dates and barcodes are kept in an encrypted vault backed by your phone’s secure hardware (Android Keystore / iOS Keychain). They are never uploaded to any server, including ours.</span>
+      </div>
+      <div class="item">
+        <span class="k">Encrypted backups (optional)</span>
+        <span class="v">If you export or enable automatic backup, the file is encrypted with a passphrase only you know. Without that passphrase the file is unreadable — even to us.</span>
+      </div>
+      <div class="item">
+        <span class="k">Autofill (Android)</span>
+        <span class="v">If you enable autofill, an encrypted, CVV-free copy of your payment cards stays on-device so Android can fill checkout forms you choose to fill.</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Section 3</span>
+    <h2>What we do not do</h2>
+    <div class="card">
+      <div class="item stop">
+        <span class="k">We never sell or rent your data</span>
+        <span class="v">Your information is not shared with advertisers or data brokers.</span>
+      </div>
+      <div class="item stop">
+        <span class="k">We never upload your card numbers</span>
+        <span class="v">They stay on your phone. There is no SmartScan server holding your cards.</span>
+      </div>
+      <div class="item stop">
+        <span class="k">We never process payments</span>
+        <span class="v">Payments happen in your own UPI app. SmartScan only pre-fills the details you enter.</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Section 4</span>
+    <h2>Your control</h2>
+    <div class="card">
+      <div class="item">
+        <span class="k">App lock</span>
+        <span class="v">Settings → Security. Require biometrics every time the app opens.</span>
+      </div>
+      <div class="item">
+        <span class="k">CVV storage</span>
+        <span class="v">Off by default. Enable it only if you want CVVs saved.</span>
+      </div>
+      <div class="item">
+        <span class="k">Delete anytime</span>
+        <span class="v">Deleting a card removes it permanently from the vault. Uninstalling the app erases the entire vault from your device.</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Section 5</span>
+    <h2>Contact</h2>
+    <div class="contact">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+        <path d="m3 7 9 6 9-6"></path>
+      </svg>
+      <a href="mailto:ayushmaan.ggn@gmail.com">ayushmaan.ggn@gmail.com</a>
+    </div>
+  </section>
+
+  <footer>
+    SmartScan · This policy explains our data practices for the SmartScan mobile app.
+    Questions or data requests are answered at the email above.
+  </footer>
+</div>

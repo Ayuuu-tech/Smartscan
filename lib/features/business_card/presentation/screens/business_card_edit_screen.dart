@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smartscan/core/theme/app_colors.dart';
 import 'package:smartscan/core/utils/validators.dart';
+import 'package:smartscan/features/business_card/data/services/business_card_store_service.dart';
 import 'package:smartscan/features/business_card/data/services/native_contacts_service.dart';
 import 'package:smartscan/features/business_card/presentation/providers/business_card_provider.dart';
 
@@ -171,6 +172,10 @@ class _BusinessCardEditScreenState
         }
       }
 
+      // Always keep a copy in the app's own vault, even if saving to the
+      // phone's contacts fails or permission is denied.
+      await ref.read(businessCardStoreProvider.notifier).add(card);
+
       final success = await contactsService.saveContact(card);
 
       if (!mounted) return;
@@ -206,7 +211,7 @@ class _BusinessCardEditScreenState
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'Contact Saved!',
+                    'Saved to app & contacts!',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -253,7 +258,8 @@ class _BusinessCardEditScreenState
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Failed to save. Check contacts permission.'),
+              content: Text(
+                  'Saved in SmartScan, but could not save to phone contacts. Check contacts permission.'),
               backgroundColor: AppColors.error,
             ),
           );

@@ -16,7 +16,7 @@ void main() {
     expect(find.text('Welcome back'), findsOneWidget);
     expect(find.text('Sign in'), findsOneWidget);
     expect(find.text('Continue with Google'), findsOneWidget);
-    expect(find.text('Continue with Apple'), findsOneWidget);
+    // Apple sign-in is only rendered on iOS, so it's absent in host tests.
     expect(find.text('Create account'), findsOneWidget);
   });
 }

@@ -13,6 +13,7 @@ import 'package:smartscan/core/theme/app_colors.dart';
 import 'package:smartscan/core/utils/card_utils.dart';
 import 'package:smartscan/features/wallet/presentation/screens/card_entry_screen.dart';
 import 'package:smartscan/features/wallet/presentation/screens/qr_scan_screen.dart';
+import 'package:smartscan/features/dashboard/presentation/widgets/banner_ad_widget.dart';
 import 'package:smartscan/features/dashboard/presentation/widgets/settings_tab.dart';
 import 'package:smartscan/features/wallet/presentation/screens/lock_screen.dart';
 import 'package:smartscan/features/wallet/presentation/widgets/card_visual.dart';
@@ -312,6 +313,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 child: Text('Error: $e',
                     style: const TextStyle(color: AppColors.error))),
           ),
+          // Banner ad below the cards — free users only (Pro hides it).
+          const Center(child: BannerAdWidget()),
           const SizedBox(height: 80),
         ],
       ),
@@ -472,7 +475,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
           _quickButton(
               icon: Icons.contact_mail_outlined,
               label: 'Visiting card',
-              onPressed: () => context.push('/business-card-scanner')),
+              onPressed: () => context.push('/visiting-cards')),
         ],
       ),
     );

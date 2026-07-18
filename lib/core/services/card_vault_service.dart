@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:smartscan/core/models/wallet_card_model.dart';
+import 'package:smartscan/core/services/auth_service.dart';
 import 'package:smartscan/core/services/auto_backup_service.dart';
 import 'package:smartscan/core/services/autofill_bridge.dart';
 import 'package:smartscan/core/services/notification_service.dart';
@@ -12,18 +13,38 @@ import 'package:smartscan/core/services/notification_service.dart';
 /// (Android Keystore-backed EncryptedSharedPreferences / iOS Keychain).
 /// Nothing here ever touches the network or Firebase.
 class CardVaultNotifier extends AsyncNotifier<List<WalletCard>> {
-  static const _storageKey = 'wallet_cards_v1';
+  static const _legacyStorageKey = 'wallet_cards_v1';
 
   static const _storage = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
   );
 
+  /// Storage key scoped to the signed-in account, so each account only
+  /// ever sees its own cards.
+  late String _storageKey;
+
   @override
   Future<List<WalletCard>> build() async {
+    // Rebuilds automatically on login/logout/account switch.
+    final uid = ref.watch(authStateProvider)?.uid;
+    _storageKey = uid == null ? _legacyStorageKey : 'wallet_cards_v1_$uid';
     try {
-      final raw = await _storage.read(key: _storageKey);
-      if (raw == null || raw.isEmpty) return [];
-      return WalletCard.decodeList(raw);
+      var raw = await _storage.read(key: _storageKey);
+      // One-time migration: cards saved before per-account scoping live
+      // under the legacy key — hand them to the first account that loads.
+      if ((raw == null || raw.isEmpty) && uid != null) {
+        final legacy = await _storage.read(key: _legacyStorageKey);
+        if (legacy != null && legacy.isNotEmpty) {
+          await _storage.write(key: _storageKey, value: legacy);
+          await _storage.delete(key: _legacyStorageKey);
+          raw = legacy;
+        }
+      }
+      final cards =
+          (raw == null || raw.isEmpty) ? <WalletCard>[] : WalletCard.decodeList(raw);
+      // Keep the Android Autofill dataset in sync with the active account.
+      await AutofillBridge.syncCards(cards);
+      return cards;
     } catch (e) {
       debugPrint('CardVault load error: $e');
       return [];

@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 class BusinessCardModel {
+  /// Set once the card is stored in the local vault.
+  String? id;
+  DateTime? savedAt;
   String? fullName;
   List<String> phoneNumbers;
   List<String> emailAddresses;
@@ -13,6 +16,8 @@ class BusinessCardModel {
   bool isDuplicate;
 
   BusinessCardModel({
+    this.id,
+    this.savedAt,
     this.fullName,
     this.phoneNumbers = const [],
     this.emailAddresses = const [],
@@ -31,6 +36,8 @@ class BusinessCardModel {
     emailAddresses.isNotEmpty;
 
   BusinessCardModel copyWith({
+    String? id,
+    DateTime? savedAt,
     String? fullName,
     List<String>? phoneNumbers,
     List<String>? emailAddresses,
@@ -43,6 +50,8 @@ class BusinessCardModel {
     bool? isDuplicate,
   }) {
     return BusinessCardModel(
+      id: id ?? this.id,
+      savedAt: savedAt ?? this.savedAt,
       fullName: fullName ?? this.fullName,
       phoneNumbers: phoneNumbers ?? this.phoneNumbers,
       emailAddresses: emailAddresses ?? this.emailAddresses,
@@ -57,6 +66,8 @@ class BusinessCardModel {
   }
 
   Map<String, dynamic> toMap() => {
+    'id': id,
+    'savedAt': savedAt?.toIso8601String(),
     'fullName': fullName,
     'phoneNumbers': phoneNumbers,
     'emailAddresses': emailAddresses,
@@ -69,6 +80,8 @@ class BusinessCardModel {
   };
 
   factory BusinessCardModel.fromMap(Map<String, dynamic> map) => BusinessCardModel(
+    id: map['id'] as String?,
+    savedAt: map['savedAt'] != null ? DateTime.tryParse(map['savedAt'] as String) : null,
     fullName: map['fullName'] as String?,
     phoneNumbers: map['phoneNumbers'] != null ? List<String>.from(map['phoneNumbers']) : [],
     emailAddresses: map['emailAddresses'] != null ? List<String>.from(map['emailAddresses']) : [],

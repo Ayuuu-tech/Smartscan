@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:smartscan/core/services/otp_service.dart';
 import 'package:smartscan/features/onboarding/presentation/screens/splash_screen.dart';
 import 'package:smartscan/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:smartscan/features/auth/presentation/screens/login_screen.dart';
 import 'package:smartscan/features/auth/presentation/screens/create_account_screen.dart';
+import 'package:smartscan/features/auth/presentation/screens/otp_verify_screen.dart';
 import 'package:smartscan/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:smartscan/features/wallet/presentation/screens/card_entry_screen.dart';
 import 'package:smartscan/features/wallet/presentation/screens/card_detail_screen.dart';
@@ -12,9 +15,33 @@ import 'package:smartscan/features/wallet/presentation/screens/my_card_screen.da
 import 'package:smartscan/features/wallet/presentation/screens/pro_screen.dart';
 import 'package:smartscan/features/business_card/presentation/screens/business_card_scanner_screen.dart';
 import 'package:smartscan/features/business_card/presentation/screens/business_card_edit_screen.dart';
+import 'package:smartscan/features/business_card/presentation/screens/saved_business_cards_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
+  // Global OTP gate: a signed-in email/password account cannot reach any
+  // screen except the OTP page until this device has passed verification.
+  // This is what stops "back / restart bypasses the OTP".
+  redirect: (context, state) async {
+    if (!OtpService.isConfigured) return null;
+
+    User? user;
+    try {
+      user = FirebaseAuth.instance.currentUser;
+    } catch (_) {
+      return null;
+    }
+    if (user == null) return null;
+
+    final usesPassword =
+        user.providerData.any((p) => p.providerId == 'password');
+    if (!usesPassword) return null; // Google/Apple already verified
+
+    if (await OtpService.isDeviceVerified(user.uid)) return null;
+
+    // Unverified on this device — pin them to the OTP screen.
+    return state.matchedLocation == '/verify-otp' ? null : '/verify-otp';
+  },
   routes: [
     GoRoute(
       path: '/',
@@ -68,6 +95,18 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/business-card-edit',
       builder: (context, state) => const BusinessCardEditScreen(),
+    ),
+    GoRoute(
+      path: '/verify-otp',
+      builder: (context, state) => OtpVerifyScreen(
+        email: (state.extra as String?) ??
+            FirebaseAuth.instance.currentUser?.email ??
+            '',
+      ),
+    ),
+    GoRoute(
+      path: '/visiting-cards',
+      builder: (context, state) => const SavedBusinessCardsScreen(),
     ),
   ],
   errorPageBuilder: (context, state) => const MaterialPage(
