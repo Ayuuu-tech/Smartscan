@@ -13,6 +13,7 @@ import 'package:smartscan/core/theme/app_colors.dart';
 import 'package:smartscan/core/utils/card_utils.dart';
 import 'package:smartscan/features/wallet/presentation/screens/card_entry_screen.dart';
 import 'package:smartscan/features/wallet/presentation/screens/qr_scan_screen.dart';
+import 'package:smartscan/core/services/pro_gate.dart';
 import 'package:smartscan/features/dashboard/presentation/widgets/banner_ad_widget.dart';
 import 'package:smartscan/features/dashboard/presentation/widgets/settings_tab.dart';
 import 'package:smartscan/features/wallet/presentation/screens/lock_screen.dart';
@@ -251,7 +252,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
         IconButton(
           icon: const Icon(Icons.qr_code_2_rounded, color: AppColors.text),
           tooltip: 'My visiting card',
-          onPressed: () => context.push('/my-card'),
+          onPressed: () async {
+            if (await ProGate.require(context, ref,
+                feature: 'Visiting card designer')) {
+              if (mounted) context.push('/my-card');
+            }
+          },
         ),
         IconButton(
           icon: const Icon(Icons.search_rounded, color: AppColors.text),
@@ -500,10 +506,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
 
   /// F10: "which card should I use?" — pick a category, see the cards
   /// that earn rewards there (favorites first).
-  void _showBestCardSheet() {
+  Future<void> _showBestCardSheet() async {
+    if (!await ProGate.require(context, ref,
+        feature: 'Smart card suggestions')) {
+      return;
+    }
     final cards = (ref.read(cardVaultProvider).value ?? [])
         .where((c) => c.type.isPayment)
         .toList();
+    if (!mounted) return;
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.background,

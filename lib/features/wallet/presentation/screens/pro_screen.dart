@@ -198,7 +198,7 @@ class ProScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'Subscriptions go live once the app is on the $_storeName. Every Pro feature is free until then — enjoy!',
+              'Subscriptions go live once the app is on the $_storeName. Pro features unlock as soon as you subscribe.',
               textAlign: TextAlign.center,
               style: const TextStyle(color: AppColors.hint, fontSize: 12),
             ),

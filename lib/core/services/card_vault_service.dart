@@ -6,6 +6,7 @@ import 'package:smartscan/core/services/auth_service.dart';
 import 'package:smartscan/core/services/auto_backup_service.dart';
 import 'package:smartscan/core/services/autofill_bridge.dart';
 import 'package:smartscan/core/services/notification_service.dart';
+import 'package:smartscan/core/services/purchase_service.dart';
 
 /// Encrypted card vault.
 ///
@@ -96,8 +97,9 @@ class CardVaultNotifier extends AsyncNotifier<List<WalletCard>> {
     await _storage.write(key: _storageKey, value: WalletCard.encodeList(cards));
     // Keep the Android Autofill dataset in sync (no-op on other platforms).
     await AutofillBridge.syncCards(cards);
-    // Re-plan expiry / bill-due reminders.
-    await NotificationService.reschedule(cards);
+    // Re-plan expiry / bill-due reminders (Pro-only; free keeps the daily nudge).
+    final isPro = ref.read(proProvider).value?.isPro ?? false;
+    await NotificationService.reschedule(cards, isPro: isPro);
     // Refresh the automatic encrypted backup (no-op unless enabled).
     await AutoBackupService.maybeBackup(cards);
   }

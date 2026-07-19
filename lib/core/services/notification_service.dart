@@ -96,12 +96,15 @@ class NotificationService {
 
   /// Re-plans every reminder from the current vault. Called whenever
   /// cards change; safe to call before init (no-op).
-  static Future<void> reschedule(List<WalletCard> cards) async {
+  static Future<void> reschedule(List<WalletCard> cards,
+      {bool isPro = false}) async {
     if (!_ready) return;
     try {
       await _plugin.cancelAll();
-      // cancelAll() also drops the recurring nudge — re-arm it.
+      // cancelAll() also drops the recurring nudge — re-arm it (free + Pro).
       await scheduleEngagementReminder();
+      // Bill & expiry reminders are a Pro feature.
+      if (!isPro) return;
       var id = 0;
       final now = tz.TZDateTime.now(tz.local);
 

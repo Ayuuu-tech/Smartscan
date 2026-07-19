@@ -14,6 +14,7 @@ import 'package:smartscan/core/services/autofill_bridge.dart';
 import 'package:smartscan/core/services/backup_service.dart';
 import 'package:smartscan/core/services/biometric_service.dart';
 import 'package:smartscan/core/services/card_vault_service.dart';
+import 'package:smartscan/core/services/pro_gate.dart';
 import 'package:smartscan/core/services/settings_service.dart';
 import 'package:smartscan/core/theme/app_colors.dart';
 import 'package:smartscan/features/settings/presentation/screens/privacy_policy_screen.dart';
@@ -322,6 +323,10 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
   Future<void> _toggleAutoBackup(bool on) async {
     final messenger = ScaffoldMessenger.of(context);
     if (on) {
+      if (!await ProGate.require(context, ref,
+          feature: 'Automatic backups')) {
+        return;
+      }
       final pass = await _promptPassphrase(confirm: true);
       if (pass == null) return;
       await AutoBackupService.enable(pass);

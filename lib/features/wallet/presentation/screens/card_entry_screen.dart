@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:smartscan/core/models/wallet_card_model.dart';
 import 'package:smartscan/core/services/card_vault_service.dart';
 import 'package:smartscan/core/services/settings_service.dart';
+import 'package:smartscan/core/services/pro_gate.dart';
 import 'package:smartscan/core/theme/app_colors.dart';
 import 'package:smartscan/core/theme/card_themes.dart';
 import 'package:smartscan/core/utils/card_utils.dart';
@@ -442,14 +443,22 @@ class _CardEntryScreenState extends ConsumerState<CardEntryScreen> {
               spacing: 10,
               runSpacing: 10,
               children: [
-                for (final t in WalletCardTheme.presets)
+                for (final (i, t) in WalletCardTheme.presets.indexed)
                   Tooltip(
                     message: t.name,
                     child: GestureDetector(
-                      onTap: () => setState(() {
-                        _color = t.color1;
-                        _color2 = t.color2;
-                      }),
+                      // The first theme is free; the rest are Pro.
+                      onTap: () async {
+                        if (i != 0 &&
+                            !await ProGate.require(context, ref,
+                                feature: 'Custom card themes')) {
+                          return;
+                        }
+                        setState(() {
+                          _color = t.color1;
+                          _color2 = t.color2;
+                        });
+                      },
                       child: Container(
                         width: 44,
                         height: 44,
@@ -466,7 +475,10 @@ class _CardEntryScreenState extends ConsumerState<CardEntryScreen> {
                         child: _color == t.color1 && _color2 == t.color2
                             ? const Icon(Icons.check_rounded,
                                 color: Colors.white, size: 20)
-                            : null,
+                            : (i != 0
+                                ? const Icon(Icons.lock_rounded,
+                                    color: Colors.white70, size: 16)
+                                : null),
                       ),
                     ),
                   ),

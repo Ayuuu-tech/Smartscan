@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:smartscan/core/models/wallet_card_model.dart';
 import 'package:smartscan/core/services/biometric_service.dart';
 import 'package:smartscan/core/services/card_vault_service.dart';
+import 'package:smartscan/core/services/pro_gate.dart';
 import 'package:smartscan/core/theme/app_colors.dart';
 import 'package:smartscan/features/wallet/presentation/screens/card_entry_screen.dart';
 import 'package:smartscan/features/wallet/presentation/widgets/card_visual.dart';
@@ -277,7 +278,12 @@ class _CardDetailScreenState extends ConsumerState<CardDetailScreen> {
               icon: Icons.ios_share_rounded,
               title: 'Share card via QR',
               subtitle: 'Family scans it with SmartScan to add this card',
-              onTap: () => _showShareQr(card),
+              onTap: () async {
+                if (await ProGate.require(context, ref,
+                    feature: 'Family card sharing')) {
+                  _showShareQr(card);
+                }
+              },
             ),
           ],
           if (isPayment &&
